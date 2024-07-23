@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +37,23 @@ public class ProductInventory {
      */
     Map<Integer, String> findProductNames() {
         // TODO: replace stub implementation
+        if (productUtility == null){
+            throw new IllegalArgumentException("productUtility is null");
+        }
+        if (productIDs == null){
+            throw new IllegalArgumentException("productID is null");
+        }
         Map<Integer, String> stubMap = new HashMap<Integer, String>();
         for (Integer productID : productIDs) {
-            stubMap.put(productID, "");
+            String name;
+            try {
+                name = productUtility.findProductName(productID);
+            } catch (NullPointerException e){
+                throw new IllegalArgumentException("productID is null");
+            }
+            if (name !=null) {
+                stubMap.put(productID, name);
+            }
         }
         return stubMap;
     }
@@ -49,7 +65,17 @@ public class ProductInventory {
      */
     Optional<Boolean> isProductReady(Integer productID) {
         // TODO: replace stub implementation
-        Boolean stubResult = productUtility.isProductReady(0);
+
+        Boolean stubResult;
+        try {
+            stubResult = productUtility.isProductReady(productID);
+        } catch (NullPointerException e){
+            throw new IllegalArgumentException("The productID was null");
+        }
+        if (stubResult == null){
+            return Optional.empty() ;
+        }
+
         return Optional.of(stubResult);
     }
 }
